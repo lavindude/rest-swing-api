@@ -6,10 +6,10 @@ const port = process.env.PORT || 4000
 // const lobbies = []
 
 // sample data:
-const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0},
-                           {id: 2, positionX: 4, positionY: 48, positionZ: 0},
-                           {id: 3, positionX: 6, positionY: 48, positionZ: 0},
-                           {id: 4, positionX: 8, positionY: 48, positionZ: 0}
+const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0, health: 100},
+                           {id: 2, positionX: 4, positionY: 48, positionZ: 0, health: 100},
+                           {id: 3, positionX: 6, positionY: 48, positionZ: 0, health: 100},
+                           {id: 4, positionX: 8, positionY: 48, positionZ: 0, health: 100}
                          ]
 const lobbies = [{id: 1, numOfPlayers: 4, lobbyPlayers: [connectedPlayers[0], connectedPlayers[1],
                                                         connectedPlayers[2], connectedPlayers[3]]}]
@@ -82,6 +82,11 @@ app.get('/getPosition', function (req, res) { // getPosition?userId=1
     res.send(connectedPlayers[userId-1])
 })
 
+app.get('/getHealth', function(req, res) { // getHealth?playerId=1
+    const playerId = parseInt(req.query.playerId)
+    res.send({"health" : connectedPlayers[playerId-1]})
+})
+
 // Mutations:
 app.get('/createGameCode', function (req, res) { // createGameCode?userId=1
     const userId = req.query.userId
@@ -148,6 +153,11 @@ app.get('/syncPlayerPosition', function (req, res) { // syncPlayerPosition?playe
 
         res.send({"status":"ok"})
     }
+})
+
+app.get('/pistolHit', function(req, res) { // pistolHit?playerId=1
+    const playerId = parseInt(req.query.playerId)
+    connectedPlayers[playerId-1].health -= 10
 })
 
 // need a remove user query, remove from lobby (CRUD)
