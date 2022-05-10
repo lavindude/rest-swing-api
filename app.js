@@ -165,6 +165,8 @@ app.get('/dealDamage', function(req, res) { // dealDamage?instanceId=5000&damage
             break
         }
     }
+
+    res.send({"status":"ok"})
 })
 
 // need a remove user query, remove from lobby (CRUD)
