@@ -169,6 +169,20 @@ app.get('/dealDamage', function(req, res) { // dealDamage?instanceId=5000&damage
     res.send({"status":"ok"})
 })
 
+app.get('/healDamage', function(req, res) { //healDamage?instanceId=5000&heal=50
+    const instanceId = parseInt(req.query.instanceId)
+    const heal = parseInt(req.query.heal)
+
+    for (let i = 0; i < connectedPlayers.length; i++) {
+        if (connectedPlayers[i].instanceId == instanceId) {
+            connectedPlayers[i].health += heal
+            break
+        }
+    }
+
+    res.send({"status":"ok"})
+})
+
 // need a remove user query, remove from lobby (CRUD)
 
 app.listen(port, function () {
