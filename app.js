@@ -186,6 +186,15 @@ app.get('/respawnPlayer', function(req, res) { // respawnPlayer?playerId=2
     res.send({"status":"ok"})
 })
 
+app.get('/resetAllHealth', function(req, res) { // resetAllHealth
+    for (let i = 0; i < connectedPlayers.length; i++) {
+        connectedPlayers[i].health = 500
+        connectedPlayers[i].isDead = false
+    }
+
+    res.send({"status":"ok"})
+})
+
 // need a remove user query, remove from lobby (CRUD)
 
 app.listen(port, function () {
