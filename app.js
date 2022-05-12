@@ -6,10 +6,10 @@ const port = process.env.PORT || 4000
 // const lobbies = []
 
 // sample data:
-const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0, health: 500},
-                           {id: 2, positionX: 4, positionY: 48, positionZ: 0, health: 500},
-                           {id: 3, positionX: 6, positionY: 48, positionZ: 0, health: 500},
-                           {id: 4, positionX: 8, positionY: 48, positionZ: 0, health: 500}
+const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0, health: 500, isDead: false},
+                           {id: 2, positionX: 4, positionY: 48, positionZ: 0, health: 500, isDead: false},
+                           {id: 3, positionX: 6, positionY: 48, positionZ: 0, health: 500, isDead: false},
+                           {id: 4, positionX: 8, positionY: 48, positionZ: 0, health: 500, isDead: false}
                          ]
 const lobbies = [{id: 1, numOfPlayers: 4, lobbyPlayers: [connectedPlayers[0], connectedPlayers[1],
                                                         connectedPlayers[2], connectedPlayers[3]]}]
@@ -161,14 +161,27 @@ app.get('/dealDamage', function(req, res) { // dealDamage?playerId=2&damage=50
 
     connectedPlayers[playerId-1].health -= damage
 
+    if (connectedPlayers[playerId-1].health == 0) {
+        connectedPlayers[playerId-1].isDead = true
+    }
+
     res.send({"status":"ok"})
 })
 
-app.get('/healDamage', function(req, res) { //healDamage?playerId=2&heal=50
+app.get('/healDamage', function(req, res) { // healDamage?playerId=2&heal=50
     const playerId = parseInt(req.query.playerId)
     const heal = parseInt(req.query.heal)
 
     connectedPlayers[playerId-1].health += heal
+
+    res.send({"status":"ok"})
+})
+
+app.get('/respawnPlayer', function(req, res) { // respawnPlayer?playerId=2
+    const playerId = parseInt(req.query.playerId)
+
+    connectedPlayers[playerId-1].health = 500
+    connectedPlayers[playerId-1].isDead = false
 
     res.send({"status":"ok"})
 })
