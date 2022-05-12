@@ -6,10 +6,10 @@ const port = process.env.PORT || 4000
 // const lobbies = []
 
 // sample data:
-const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0, health: 500, instanceId: 56},
-                           {id: 2, positionX: 4, positionY: 48, positionZ: 0, health: 500, instanceId: null},
-                           {id: 3, positionX: 6, positionY: 48, positionZ: 0, health: 500, instanceId: null},
-                           {id: 4, positionX: 8, positionY: 48, positionZ: 0, health: 500, instanceId: null}
+const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0, health: 500},
+                           {id: 2, positionX: 4, positionY: 48, positionZ: 0, health: 500},
+                           {id: 3, positionX: 6, positionY: 48, positionZ: 0, health: 500},
+                           {id: 4, positionX: 8, positionY: 48, positionZ: 0, health: 500}
                          ]
 const lobbies = [{id: 1, numOfPlayers: 4, lobbyPlayers: [connectedPlayers[0], connectedPlayers[1],
                                                         connectedPlayers[2], connectedPlayers[3]]}]
@@ -155,30 +155,20 @@ app.get('/syncPlayerPosition', function (req, res) { // syncPlayerPosition?playe
     }
 })
 
-app.get('/dealDamage', function(req, res) { // dealDamage?instanceId=5000&damage=50
-    const instanceId = parseInt(req.query.instanceId)
+app.get('/dealDamage', function(req, res) { // dealDamage?playerId=2&damage=50
+    const playerId = parseInt(req.query.instanceId)
     const damage = parseInt(req.query.damage)
 
-    for (let i = 0; i < connectedPlayers.length; i++) {
-        if (connectedPlayers[i].instanceId == instanceId) {
-            connectedPlayers[i].health -= damage
-            break
-        }
-    }
+    connectedPlayers[playerId-1].health -= damage
 
     res.send({"status":"ok"})
 })
 
-app.get('/healDamage', function(req, res) { //healDamage?instanceId=5000&heal=50
-    const instanceId = parseInt(req.query.instanceId)
+app.get('/healDamage', function(req, res) { //healDamage?playerId=2&heal=50
+    const playerId = parseInt(req.query.playerId)
     const heal = parseInt(req.query.heal)
 
-    for (let i = 0; i < connectedPlayers.length; i++) {
-        if (connectedPlayers[i].instanceId == instanceId) {
-            connectedPlayers[i].health += heal
-            break
-        }
-    }
+    connectedPlayers[playerId-1].health += heal
 
     res.send({"status":"ok"})
 })
