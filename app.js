@@ -161,7 +161,7 @@ app.get('/dealDamage', function(req, res) { // dealDamage?playerId=2&damage=50
 
     connectedPlayers[playerId-1].health -= damage
 
-    if (connectedPlayers[playerId-1].health == 0) {
+    if (connectedPlayers[playerId-1].health <= 0) {
         connectedPlayers[playerId-1].isDead = true
     }
 
