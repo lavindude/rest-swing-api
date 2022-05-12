@@ -156,7 +156,7 @@ app.get('/syncPlayerPosition', function (req, res) { // syncPlayerPosition?playe
 })
 
 app.get('/dealDamage', function(req, res) { // dealDamage?playerId=2&damage=50
-    const playerId = parseInt(req.query.instanceId)
+    const playerId = parseInt(req.query.playerId)
     const damage = parseInt(req.query.damage)
 
     connectedPlayers[playerId-1].health -= damage
