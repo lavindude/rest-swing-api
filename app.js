@@ -2,14 +2,19 @@ var express = require('express');
 var app = express();
 const port = process.env.PORT || 4000
 
+const startX = 5
+const startY = 48
+const startZ = 0
+const maxHealth = 500
+
 // const connectedPlayers = []
 // const lobbies = []
 
 // sample data:
-const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0, health: 500, isDead: false},
-                           {id: 2, positionX: 4, positionY: 48, positionZ: 0, health: 500, isDead: false},
-                           {id: 3, positionX: 6, positionY: 48, positionZ: 0, health: 500, isDead: false},
-                           {id: 4, positionX: 8, positionY: 48, positionZ: 0, health: 500, isDead: false}
+const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0, health: maxHealth, isDead: false},
+                           {id: 2, positionX: 4, positionY: 48, positionZ: 0, health: maxHealth, isDead: false},
+                           {id: 3, positionX: 6, positionY: 48, positionZ: 0, health: maxHealth, isDead: false},
+                           {id: 4, positionX: 8, positionY: 48, positionZ: 0, health: maxHealth, isDead: false}
                          ]
 const lobbies = [{id: 1, numOfPlayers: 4, lobbyPlayers: [connectedPlayers[0], connectedPlayers[1],
                                                         connectedPlayers[2], connectedPlayers[3]]}]
@@ -180,7 +185,11 @@ app.get('/healDamage', function(req, res) { // healDamage?playerId=2&heal=50
 app.get('/respawnPlayer', function(req, res) { // respawnPlayer?playerId=2
     const playerId = parseInt(req.query.playerId)
 
-    connectedPlayers[playerId-1].health = 500
+    connectedPlayers[playerId-1].positionX = startX
+    connectedPlayers[playerId-1].positionY = startY
+    connectedPlayers[playerId-1].positionZ = startZ
+
+    connectedPlayers[playerId-1].health = maxHealth
     connectedPlayers[playerId-1].isDead = false
 
     res.send({"status":"ok"})
@@ -188,7 +197,7 @@ app.get('/respawnPlayer', function(req, res) { // respawnPlayer?playerId=2
 
 app.get('/resetAllHealth', function(req, res) { // resetAllHealth
     for (let i = 0; i < connectedPlayers.length; i++) {
-        connectedPlayers[i].health = 500
+        connectedPlayers[i].health = maxHealth
         connectedPlayers[i].isDead = false
     }
 
