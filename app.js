@@ -98,7 +98,7 @@ app.get('/getPosition', function (req, res) { // getPosition?userId=1
 
 app.get('/getHealth', function(req, res) { // getHealth?playerId=1
     const playerId = parseInt(req.query.playerId)
-    res.send({"health" : connectedPlayers[playerId-1]})
+    res.send({"health" : connectedPlayers[playerId-1], "startX": startX, "startY": startY, "startZ": startZ})
 })
 
 // Mutations:
