@@ -28,6 +28,15 @@ const getIndex = (playerId, lobbyId) => {
     }
 }
 
+const respawnPlayer = (playerId) => {
+    connectedPlayers[playerId-1].positionX = startX
+    connectedPlayers[playerId-1].positionY = startY
+    connectedPlayers[playerId-1].positionZ = startZ
+
+    connectedPlayers[playerId-1].health = maxHealth
+    connectedPlayers[playerId-1].isDead = false
+}
+
 var moved = false
 
 app.get('/printHello', function (req, res) {
@@ -168,6 +177,7 @@ app.get('/dealDamage', function(req, res) { // dealDamage?playerId=2&damage=50
 
     if (connectedPlayers[playerId-1].health <= 0) {
         connectedPlayers[playerId-1].isDead = true
+        respawnPlayer(playerId)
     }
 
     res.send({"status":"ok"})
@@ -184,14 +194,7 @@ app.get('/healDamage', function(req, res) { // healDamage?playerId=2&heal=50
 
 app.get('/respawnPlayer', function(req, res) { // respawnPlayer?playerId=2
     const playerId = parseInt(req.query.playerId)
-
-    connectedPlayers[playerId-1].positionX = startX
-    connectedPlayers[playerId-1].positionY = startY
-    connectedPlayers[playerId-1].positionZ = startZ
-
-    connectedPlayers[playerId-1].health = maxHealth
-    connectedPlayers[playerId-1].isDead = false
-
+    respawnPlayer(playerId)
     res.send({"status":"ok"})
 })
 
