@@ -177,9 +177,14 @@ app.get('/dealDamage', function(req, res) { // dealDamage?playerId=2&damage=50
 
     if (connectedPlayers[playerId-1].health <= 0) {
         connectedPlayers[playerId-1].isDead = true
-        respawnPlayer(playerId)
     }
 
+    res.send({"status":"ok"})
+})
+
+app.get('/deathConfirmed', function(req, res) { // deathConfirmed?playerId=1
+    const playerId = parseInt(req.query.playerId)
+    respawnPlayer(playerId)
     res.send({"status":"ok"})
 })
 
@@ -213,7 +218,6 @@ app.get('/killPlayer', function(req, res) { // killPlayer?playerId=1
 
     connectedPlayers[playerId-1].health = 0
     connectedPlayers[playerId-1].isDead = true
-    respawnPlayer(playerId)
 
     res.send({"status":"ok"})
 })
