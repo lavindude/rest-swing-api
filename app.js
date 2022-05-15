@@ -207,6 +207,16 @@ app.get('/resetAllHealth', function(req, res) { // resetAllHealth
     res.send({"status":"ok"})
 })
 
+// ** THIS IS USED FOR TESTING PURPOSES
+app.get('/killPlayer', function(req, res) { // killPlayer?playerId=1
+    const playerId = parseInt(req.query.playerId)
+
+    connectedPlayers[playerId-1].health = 0
+    connectedPlayers[playerId-1].isDead = true
+
+    res.send({"status":"ok"})
+})
+
 // need a remove user query, remove from lobby (CRUD)
 
 app.listen(port, function () {
