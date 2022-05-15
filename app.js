@@ -213,6 +213,7 @@ app.get('/killPlayer', function(req, res) { // killPlayer?playerId=1
 
     connectedPlayers[playerId-1].health = 0
     connectedPlayers[playerId-1].isDead = true
+    respawnPlayer(playerId)
 
     res.send({"status":"ok"})
 })
