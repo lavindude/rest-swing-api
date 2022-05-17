@@ -5,7 +5,7 @@ const port = process.env.PORT || 4000
 const startX = 5
 const startY = 48
 const startZ = 0
-const maxHealth = 500
+const maxHealth = 300
 
 // const connectedPlayers = []
 // const lobbies = []
