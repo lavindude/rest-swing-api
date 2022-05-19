@@ -10,14 +10,15 @@ const maxHealth = 300
 // const connectedPlayers = []
 // const lobbies = []
 
-// sample data:
-const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0, health: maxHealth, isDead: false},
-                           {id: 2, positionX: 4, positionY: 48, positionZ: 0, health: maxHealth, isDead: false},
-                           {id: 3, positionX: 6, positionY: 48, positionZ: 0, health: maxHealth, isDead: false},
-                           {id: 4, positionX: 8, positionY: 48, positionZ: 0, health: maxHealth, isDead: false}
+// sample data (hard coded):
+const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0, health: maxHealth, isDead: false, flagsTaken: []},
+                           {id: 2, positionX: 4, positionY: 48, positionZ: 0, health: maxHealth, isDead: false, flagsTaken: []},
+                           {id: 3, positionX: 6, positionY: 48, positionZ: 0, health: maxHealth, isDead: false, flagsTaken: []},
+                           {id: 4, positionX: 8, positionY: 48, positionZ: 0, health: maxHealth, isDead: false, flagsTaken: []}
                          ]
 const lobbies = [{id: 1, numOfPlayers: 4, lobbyPlayers: [connectedPlayers[0], connectedPlayers[1],
-                                                        connectedPlayers[2], connectedPlayers[3]]}]
+                                                        connectedPlayers[2], connectedPlayers[3]],
+                                                    flagsAvailable: [1, 2, 3, 4, 5]}]
 
 const getIndex = (playerId, lobbyId) => {
     const curLobbyArray = lobbies[lobbyId-1].lobbyPlayers
@@ -35,6 +36,24 @@ const respawnPlayer = (playerId) => {
 
     connectedPlayers[playerId-1].health = maxHealth
     connectedPlayers[playerId-1].isDead = false
+
+    const flags = connectedPlayers[playerId-1].flagsTaken
+    connectedPlayers[playerId-1].flagsTaken = []
+
+    let lobbyId = null
+    lobbies.forEach(item => {
+        if (item.lobbyPlayers.includes(connectedPlayers[playerId-1])) {
+            lobbyId = item.id
+        }
+    })
+
+    if (lobbyId != null) {
+        flags.forEach(item => {
+            lobbies[lobbyId-1].flagsAvailable.push(item)
+        })
+
+        lobbies[lobbyId-1].flagsAvailable = lobbies[lobbyId-1].flagsAvailable.sort()
+    }
 }
 
 var moved = false
@@ -84,6 +103,18 @@ app.get('/setNotMoved', function (req, res) {
     catch {
         res.send({"status": "failed"})
     }
+})
+
+app.get('/getLobbyFlags', function (req, res) { // getLobbyFlags?lobbyId=1
+    const lobbyId = req.query.lobbyId
+
+    res.send({"flagsAvailable" : lobbies[lobbyId-1].flagsAvailable})
+})
+
+app.get('/getPlayerFlags', function (req, res) { // getPlayerFlags?playerId=1
+    const playerId = req.query.playerId
+
+    res.send({"flagsTaken" : connectedPlayers[playerId-1].flagsTaken})
 })
 // **********
 
@@ -208,6 +239,18 @@ app.get('/resetAllHealth', function(req, res) { // resetAllHealth
         connectedPlayers[i].health = maxHealth
         connectedPlayers[i].isDead = false
     }
+
+    res.send({"status":"ok"})
+})
+
+app.get('/takeFlag', function(req, res) { // takeFlag?playerId=1&flagNum=2&lobbyId=1
+    const playerId = parseInt(req.query.playerId)
+    const flagNum = parseInt(req.query.flagNum)
+    const lobbyId = parseInt(req.query.lobbyId)
+
+    lobbies[lobbyId-1].flagsAvailable = lobbies[lobbyId-1].flagsAvailable.filter(item => item != flagNum)
+    
+    connectedPlayers[playerId-1].flagsTaken.push(flagNum)
 
     res.send({"status":"ok"})
 })
