@@ -52,7 +52,9 @@ const respawnPlayer = (playerId) => {
             lobbies[lobbyId-1].flagsAvailable.push(item)
         })
 
+        //keep lobby flags array clean
         lobbies[lobbyId-1].flagsAvailable = lobbies[lobbyId-1].flagsAvailable.sort()
+        lobbies[lobbyId-1].flagsAvailable = [...new Set(lobbies[lobbyId-1].flagsAvailable)]
     }
 }
 
