@@ -29,7 +29,7 @@ const getIndex = (playerId, lobbyId) => {
     }
 }
 
-const cleanLobbyFlagsArray = () => {
+const cleanLobbyFlagsArray = (lobbyId) => {
     lobbies[lobbyId-1].flagsAvailable = lobbies[lobbyId-1].flagsAvailable.sort()
     lobbies[lobbyId-1].flagsAvailable = [...new Set(lobbies[lobbyId-1].flagsAvailable)]
 }
@@ -56,7 +56,7 @@ const respawnPlayer = (playerId) => {
         flags.forEach(item => lobbies[lobbyId-1].flagsAvailable.push(item))
 
         //keep lobby flags array clean
-        cleanLobbyFlagsArray()
+        cleanLobbyFlagsArray(lobbyId)
     }
 }
 
@@ -269,7 +269,7 @@ app.get('/resetPlayerData', function(req, res) { // resetPlayerData?playerId=1&l
 
     const flagsTaken = connectedPlayers[playerId-1].flagsTaken
     flagsTaken.forEach(item => lobbies[lobbyId-1].flagsAvailable.push(item))
-    cleanLobbyFlagsArray()
+    cleanLobbyFlagsArray(lobbyId)
     connectedPlayers[playerId-1].flagsTaken = []
 
     res.send({"status":"ok"})
