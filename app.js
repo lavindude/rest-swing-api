@@ -253,6 +253,7 @@ app.get('/takeFlag', function(req, res) { // takeFlag?playerId=1&flagNum=2&lobby
     lobbies[lobbyId-1].flagsAvailable = lobbies[lobbyId-1].flagsAvailable.filter(item => item != flagNum)
     
     connectedPlayers[playerId-1].flagsTaken.push(flagNum)
+    connectedPlayers[playerId-1].flagsTaken = connectedPlayers[playerId-1].flagsTaken.sort()
 
     res.send({"status":"ok"})
 })
