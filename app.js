@@ -18,7 +18,7 @@ const connectedPlayers = [{id: 1, positionX: 2, positionY: 48, positionZ: 0, hea
                          ]
 const lobbies = [{id: 1, numOfPlayers: 4, lobbyPlayers: [connectedPlayers[0], connectedPlayers[1],
                                                         connectedPlayers[2], connectedPlayers[3]],
-                                                    flagsAvailable: [1, 2, 3, 4, 5]}]
+                                                    flagsAvailable: [1, 2, 3, 4, 5], playerWon: -1}]
 
 const getIndex = (playerId, lobbyId) => {
     const curLobbyArray = lobbies[lobbyId-1].lobbyPlayers
@@ -53,6 +53,10 @@ const respawnPlayer = (playerId) => {
     })
 
     if (lobbyId != null) {
+        if (lobbies[lobbyId-1].playerWon == playerId) {
+            lobbies[lobbyId-1].playerWon = -1
+        }
+
         flags.forEach(item => lobbies[lobbyId-1].flagsAvailable.push(item))
 
         //keep lobby flags array clean
@@ -119,6 +123,12 @@ app.get('/getPlayerFlags', function (req, res) { // getPlayerFlags?playerId=1
     const playerId = req.query.playerId
 
     res.send({"flagsTaken" : connectedPlayers[playerId-1].flagsTaken})
+})
+
+app.get('/getPlayerWon', function (req, res) { // getPlayerWon?lobbyId=1
+    const lobbyId = req.query.lobbyId
+
+    res.send({"playerWon" : lobbies[lobbyId-1].playerWon})
 })
 // **********
 
@@ -271,6 +281,15 @@ app.get('/resetPlayerData', function(req, res) { // resetPlayerData?playerId=1&l
     flagsTaken.forEach(item => lobbies[lobbyId-1].flagsAvailable.push(item))
     cleanLobbyFlagsArray(lobbyId)
     connectedPlayers[playerId-1].flagsTaken = []
+
+    res.send({"status":"ok"})
+})
+
+app.get('/sendPlayerWon', function(req, res) { // sendPlayerWon?playerId=1&lobbyId=1
+    const playerId = parseInt(req.query.playerId)
+    const lobbyId = parseInt(req.query.lobbyId)
+
+    lobbies[lobbyId-1].playerWon = playerId
 
     res.send({"status":"ok"})
 })
