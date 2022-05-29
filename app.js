@@ -6,6 +6,7 @@ const startX = 5
 const startY = 48
 const startZ = 0
 const maxHealth = 300
+const ogFlags = [1, 2, 3, 4, 5]
 
 // const connectedPlayers = []
 // const lobbies = []
@@ -290,6 +291,19 @@ app.get('/sendPlayerWon', function(req, res) { // sendPlayerWon?playerId=1&lobby
     const lobbyId = parseInt(req.query.lobbyId)
 
     lobbies[lobbyId-1].playerWon = playerId
+
+    res.send({"status":"ok"})
+})
+
+app.get('/resetFlagsAndPlayerWon', function(req, res) { // resetFlagsAndPlayerWon?lobbyId=1
+    const lobbyId = parseInt(req.query.lobbyId)
+
+    lobbies[lobbyId-1].lobbyPlayers.forEach(item => {
+        item.flagsTaken = []
+    })
+
+    lobbies[lobbyId-1].flagsAvailable = ogFlags
+    lobbies[lobbyId-1].playerWon = -1
 
     res.send({"status":"ok"})
 })
